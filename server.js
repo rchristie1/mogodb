@@ -1,103 +1,102 @@
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
 
-const url = 'mongodb://localhost:27017/test';
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost:27017/test_goose', { useNewUrlParser: true });
 
-// MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
-//     if(err) {
-//         console.log('could not connect')
-//     }
+const carSchema = mongoose.Schema({
+  brand: String,
+  model: String,
+  year: Number,
+  avail: Boolean,
+});
 
-//     console.log('connected');
-//     client.close();
+const Car = mongoose.model('Car', carSchema);
+
+////////// INSERT //////////
+//#region
+// const items = [
+//   {
+//     brand: 'Ford',
+//     model: 'Mustang',
+//     year: 2020,
+//     avail: true,
+//   },
+//   {
+//     brand: 'Dodge',
+//     model: 'Challenger',
+//     year: 2021,
+//     avail: false,
+//   },
+//   {
+//     brand: 'Ford',
+//     model: 'Fiesta',
+//     year: 2012,
+//     avail: true,
+//   },
+//   {
+//     brand: 'Subaru',
+//     model: 'Outback',
+//     year: 2017,
+//     avail: true,
+//   },
+// ];
+
+// Car.collection.insertMany(items);
+
+// const addCar = new Car();
+// Car.insertMany(items)
+
+// const addCar = new Car(
+//     {
+//         brand: 'Ford',
+//         model: 'Mustang',
+//         year: 2020,
+//         avail: true,
+//     },
+//     {
+//         brand: 'Dodge',
+//         model: 'Challenger',
+//         year: 2021,
+//         avail: false,
+//     },
+// )
+
+// addCar.save((err, doc) => {
+//     err ? console.log(err) : console.log(doc)
 // })
+//#endregion
 
-////////// CREATE //////////
-// MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
-//   const cars = [{ model: 'ford', year: 2019 }, { model: 'chevy', year: 2018 }, { model: 'dodge', year: 2011 }];
-
-//   const db = client.db();
-
-//   db.collection('cars').insert(cars, (err,res) => {
-//     if(err) {
-//         return console.log(`Failed to insert: ${err}`);
-//     }
-//     console.log(res);
-//   });
-
-//   //single insert
-// //   db.collection('cars').insertOne(
-// //     {
-// //       name: 'test',
-// //       model: 'Porche',
-// //       year: 2020,
-// //     },
-// //     (err, res) => {
-// //       if (err) {
-// //         return console.log(`Cannot Insert: ${err}`);
-// //       }
-// //       console.log(res);
-// //     }
-// //   );
-
-//   client.close();
+////////// QUERY //////////
+//#region
+// Car.find({ brand: 'Lamborghini' }, (err, doc) => {
+//   err ? console.log(err) : console.log(doc);
 // });
 
-////////// READ //////////
-// MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
-//   client.db().collection('cars').find().toArray().then(data => {
-//       console.log(data);
+// Car.find((err, doc) => {
+//     err ? console.log(err) : console.log(doc);
 //   });
-//   client.db().collection('cars').find({model: 'ford'}).toArray().then(data => {
-//       console.log(data);
-//   });
-
-//   /*control what is returned like a select statement in SQL
-//     1's represent true 0 false. below should only return the id's*/
-//   const output = client
-//     .db()
-//     .collection('cars')
-//     .find({ model: 'ford' })
-//     .project({ year: 0, model: 0 });
-
-//   output.toArray().then(data => {
-//     console.log(data);
-//   });
-
-//   client.close();
-// });
+//#endregion
 
 ////////// DELETE //////////
-// MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
-//   client
-//     .db()
-//     .collection('cars')
-//     .deleteMany({ year: 2018 }, (err, doc) => {
-//       console.log(doc);
-//     });
-
-//   client.close();
+//#region
+// Car.findOneAndRemove({ brand: 'Dodge' }, (err, doc) => {
+//   err ? console.log(err) : console.log(doc);
 // });
-
-////////// UPDATE //////////
-MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
-  client
-    .db()
-    .collection('cars')
-    .findOneAndUpdate(
-        { 
-            model: 'ford' 
-        }, 
-        {
-            $set:{
-                model: 'porche',
-                name: 'cayanne'
-            }
-        },
-        {
-            returnOriginal: true
-        },
-        (err, doc) => console.log(err ? err: doc)
-    );
-
-  client.close();
-});
+//#endregion
+////////// UDATE //////////
+//#region
+// Car.update(
+//   {
+//     brand: 'Ford',
+//   },
+//   {
+//     $set: {
+//       brand: 'Lamborghini',
+//       model: 'Huracan',
+//     },
+//   },
+//   (err, doc) => {
+//     err ? console.log(err) : console.log(doc);
+//   }
+// );
+//#endregion
